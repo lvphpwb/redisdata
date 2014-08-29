@@ -1,0 +1,10 @@
+body{ background: #eeeeee;}
+.textcenter{ text-align: center;}
+.allwarp{ padding: 10px; background: #efefef;}
+#addform{ position: fixed; width: 1028px;}
+.allwarp form{ margin-bottom: 0px;}
+#scrollparent{ height: 585px;margin-top: 60px;overflow: hidden;}
+#domainlistdiv{ height: 100%;}
+.table{ background: #ffffff; color: #555555;}
+#domainlistdiv td img{ float: left; vertical-align: middle;}
+#domainlistdiv td select{ float: left; margin-left: 5px; vertical-align: middle; height: 28px;}

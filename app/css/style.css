@@ -1,0 +1,17 @@
+*{ font-family: "微软雅黑"; margin: 0px; padding: 0px;}
+a{ cursor: pointer;}
+body{width: 100%;height: 100%;position: absolute;overflow: hidden;display: -webkit-box;-webkit-box-orient: horizontal;}
+
+#titlebar {height: 35px;width: 100%;line-height: 35px;position: absolute;top: 0;left: 0;background: -webkit-linear-gradient(top, #44474a 0%, #36393c 100%);color: #eee;}
+#titlebar .dragbar {-webkit-app-region: drag;width: -webkit-calc(100% - 75px);}
+#titlebar h1{font-size: 18px;margin-left: 10px;display: inline-block; line-height: 18px;}
+#titlebar .subtitle {display: inline-block;margin-left: 10px;color: #929BA2;}
+#titlebar .nav {position: absolute;right: 0;top: 0;height: 100%;}
+#titlebar .nav span {display: block;width: 35px;height: 100%;float: left;overflow: hidden;text-indent: -999px;position: relative; cursor: pointer;}
+#titlebar .nav span:hover {color: #FFF;}
+#titlebar .nav .minimize::after {position: absolute;top: 50%;left: 50%;margin-left: -4px;margin-top: -1px;background-color: #CCD6DE;width: 9px;height: 2px;content: "";}
+#titlebar .nav .close::after {position: absolute;top: 0;left: 0;margin-top: -1px;width: 100%;height: 100%;font-weight: bold;text-align: center;font-size: 16px;content: "×";text-indent: 0;}
+#titlebar .nav .minimize:hover {background-color: #5a6064;}
+#titlebar .nav .close:hover {background-color: #C73636;}
+
+#frame{border: none; height: -webkit-calc(100% - 35px);top: 35px; width: 100%; position: absolute; background: #eeeeee;}

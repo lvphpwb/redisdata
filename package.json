@@ -1,0 +1,17 @@
+{
+    "name": "nw-demo",
+    "main": "app/index.html",
+    "window": {
+        "debug": false,
+        "icon": "app/images/logo.png",
+        "toolbar": false,
+        "width": 1100,
+        "height": 700,
+        "resizable": false,
+        "position": "center",
+        "frame": false
+    },
+    "dependencies": {
+        "node-webkit": ">=0.5.1"
+    }
+}
