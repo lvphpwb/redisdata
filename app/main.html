@@ -366,7 +366,11 @@
                             data.sort();
                             angular.forEach(data, function(value, key){
                                 $scope.typeofkey(value, function(type){
-                                    $("#keyslist").append('<option value="' + value + '" data-type="' + type + '">' + value + '      [' + type + ']</option>');
+                                    var option = $("<option></option>");
+                                    option.attr("value", value);
+                                    option.attr("data-type", type);
+                                    option.text(value + '      [' + type + ']');
+                                    $("#keyslist").append(option);
                                     offset++;
                                     if(offset == len){
                                         $("#keyslist").find('option').bind('click', $scope.selectkey);
