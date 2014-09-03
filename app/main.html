@@ -360,26 +360,32 @@
                         if(data.length > 2000){
                             data = data.slice(0, 2000);
                         }
-                        var len = data.length;
+                        var keylen = data.length;
                         var offset = 0;
-                        if(len > 0){
+                        if(keylen > 0){
                             data.sort();
-                            angular.forEach(data, function(value, key){
-                                $scope.typeofkey(value, function(type){
-                                    var option = $("<option></option>");
-                                    option.attr("value", value);
-                                    option.attr("data-type", type);
-                                    option.text(value + '      [' + type + ']');
-                                    $("#keyslist").append(option);
-                                    offset++;
-                                    if(offset == len){
-                                        $("#keyslist").find('option').bind('click', $scope.selectkey);
-                                        if(len>2000){
-                                            jQuery.lvalert.warning({msg : "KEY的数量超过2000个，只列出2000个！"});
+                            angular.forEach(data, function(key, index){
+                                $scope.typeofkey(key, function(type){
+                                    $scope.sizeofkey(type, key, function(data, len){
+                                        var option = $("<option></option>");
+                                        option.attr("value", key);
+                                        option.attr("data-type", type);
+                                        if(type == "string"){
+                                            option.text(key + '      [' + type + ']');
                                         }else{
-                                            jQuery.lvalert.hide();
+                                            option.text(key + '      [' + type + ':' + len + ']');
                                         }
-                                    }
+                                        $("#keyslist").append(option);
+                                        offset++;
+                                        if(offset == keylen){
+                                            $("#keyslist").find('option').bind('click', $scope.selectkey);
+                                            if(keylen>2000){
+                                                jQuery.lvalert.warning({msg : "KEY的数量超过2000个，只列出2000个！"});
+                                            }else{
+                                                jQuery.lvalert.hide();
+                                            }
+                                        }
+                                    });
                                 });
                             });
                         }else{
