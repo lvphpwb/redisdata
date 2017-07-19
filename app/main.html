@@ -23,12 +23,11 @@
         <div id="serverlist" style="position: absolute;top:0px; bottom:0px; left: 0px; padding: 10px;z-index:99;">
             <div id="serverbtn" style="width:210px; text-align:center;">
                 <div class="btn-group" style="width:210px;">
-                    <a class="btn btn-info" style="width:60px;" ng-click="addserver()" >新建</a>
-                    <a class="btn btn-danger" style="width:60px;" ng-click="removeserver()">删除</a>
+                    <a class="btn btn-info" style="width:180px;" ng-click="addserver()" >新建</a>
                 </div>
             </div>
             <div id="listdiv" class="alert alert-info" style="height:570px;">
-                <a class="btn" id="server_{{server.k}}"  ng-class="{'btn-success': server.selected}" ng-repeat="server in serverlist | orderBy:server.port" ng-dblclick="selectserver(server)" title="双击查看">{{server.ip}}:{{server.port}}</a>
+                <a class="btn" id="server_{{server.k}}"  ng-class="{'btn-success': server.selected}" ng-repeat="server in serverlist | orderBy:server.port" ng-dblclick="selectserver(server)" title="双击查看">{{server.mark}}-{{server.ip}}:{{server.port}}&nbsp;&nbsp;<i class="icon-remove keydel" title="删除" style="cursor:pointer;"  ng-click="removeserver()"></i></a>
             </div>
         </div>
         
@@ -111,6 +110,12 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="mark">备注：</label>
+                        <div class="controls">
+                            <input type="text" id="mark" placeholder="备注">
+                        </div>
+                    </div>
                     <div class="control-group">
                         <label class="control-label" for="ip">IP地址：</label>
                         <div class="controls">
@@ -262,6 +267,7 @@
             };
             
             $scope.dealadd = function(){
+                var mark = $("#mark").val();
                 var ip = $("#ip").val();
                 var port = $("#port").val();
                 var auth = $("#auth").val();
@@ -283,7 +289,7 @@
                 if($scope.serverlist[key]){
                     jQuery.lvalert.error({msg : "此redis服务已存在！"});
                 }else{
-                    $scope.serverlist[key] = {'k':key, 'ip':ip, 'port':port, 'auth':auth, 'selected':false};
+                    $scope.serverlist[key] = {'k':key,'mark':mark, 'ip':ip, 'port':port, 'auth':auth, 'selected':false};
                     $("#addserverfor").modal('hide');
                     $scope.saveserver();
                     $scope.setscroll();
@@ -291,24 +297,26 @@
             };
             
             $scope.removeserver = function(){
-                if($scope.currentserver){
-                    $scope.confirm("您确定要删除此redis配置吗？", $scope.dealremove);
+                if(this.server && this.server.k){
+                    var key = this.server.k;
+                    $scope.confirm("您确定要删除此redis配置吗？", function(){
+                        $scope.dealremove(key);
+                    });
                 }else{
                     jQuery.lvalert.error({msg : "请先双击选择一个redis服务！"});
                 }
             };
             
-            $scope.dealremove = function(){
-                console.log($scope.currentserver);
-                var key = $scope.currentserver;
-                delete($scope.serverlist[$scope.currentserver]);
-                $scope.currentserver = "";
+            $scope.dealremove = function(key){
+                delete($scope.serverlist[key]);
                 global.jQuery("#server_" + key).empty().remove();
                 $scope.saveserver();
                 $("#confirmmodal").modal("hide");
                 jQuery.lvalert.success({msg : "删除成功！", timeout : 1500, mask : 0});
                 $scope.setscroll(100);
-                $scope.showplace('welcome');
+                if(key == $scope.currentserver){
+                    $scope.showplace('welcome');
+                }
             };
             
             $scope.showstatus = function(){
@@ -608,7 +616,7 @@
                     break;
                     break;
                   case 'zset':
-                    $scope.currentclient.zrange(key, 0, 2000, 'WITHSCORES', function(err, data){
+                    $scope.currentclient.zrevrange(key, 0, 2000, 'WITHSCORES', function(err, data){
                         if(err){
                             $scope.showplace('connecterror');
                         }else{
