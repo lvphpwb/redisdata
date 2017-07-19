@@ -21,13 +21,13 @@
     </head>
     <body style="background:#efefef;" ng-controller="redisdataController">
         <div id="serverlist" style="position: absolute;top:0px; bottom:0px; left: 0px; padding: 10px;z-index:99;">
-            <div id="serverbtn" style="width:210px; text-align:center;">
+            <div id="serverbtn" style="width:210px; text-align:center; margin:auto; margin-bottom:10px;">
                 <div class="btn-group" style="width:210px;">
                     <a class="btn btn-info" style="width:180px;" ng-click="addserver()" >新建</a>
                 </div>
             </div>
             <div id="listdiv" class="alert alert-info" style="height:570px;">
-                <a class="btn" id="server_{{server.k}}"  ng-class="{'btn-success': server.selected}" ng-repeat="server in serverlist | orderBy:server.port" ng-dblclick="selectserver(server)" title="双击查看">{{server.mark}}-{{server.ip}}:{{server.port}}&nbsp;&nbsp;<i class="icon-remove keydel" title="删除" style="cursor:pointer;"  ng-click="removeserver()"></i></a>
+                <a class="btn" id="server_{{server.k}}"  ng-class="{'btn-success': server.selected}" ng-repeat="server in serverlist | orderBy:server.port" ng-dblclick="selectserver(server)" title="双击查看">{{server.mark}}-{{server.ip}}:{{server.port}}&nbsp;&nbsp;<i class="icon-remove keydel" title="删除" style="cursor:pointer; float:right;"  ng-click="removeserver()"></i></a>
             </div>
         </div>
         
