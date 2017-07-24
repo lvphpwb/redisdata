@@ -375,11 +375,7 @@
                         if(err){
                             $scope.showplace('connecterror');
                         }else{
-                            if(data>2000){
-                                jQuery.lvalert.warning({msg : "KEY的数量超过2000个，无法列出，请使用过滤器！"});
-                            }else{
-                                 $scope.dealgetkeys(filter);
-                            }
+                            $scope.dealgetkeys(filter);
                         }
                     });
                 }else{
@@ -387,7 +383,8 @@
                 }
             };
             
-            $scope.dealgetkeys = function(filter){
+            $scope.dealgetkeys = function(filter, cursor){
+                cursor = cursor || 0;
                 //note 判断是单独取还是搜索
                 if(filter.indexOf("*") < 0){
                     var key = filter;
@@ -408,12 +405,14 @@
                     });
                 }else{
                     //note 最多只取出2000个
-                    $scope.currentclient.scan(0, "match", filter, "count", 2000, function(err, data){
+                    $scope.currentclient.scan(cursor, "match", filter, "count", 2000, function(err, data){
                         if(err){
                             $scope.showplace('connecterror');
                         }else{
+                            var start = parseInt(data[0]);
                             var keylen = data[1].length;
                             var offset = 0;
+                            var havelen = $("#keyslist").find('option').length;
                             if(keylen > 0){
                                 var keydata = data[1];
                                 keydata.sort();
@@ -437,8 +436,10 @@
                                         });
                                     });
                                 });
-                            }else{
-                                jQuery.lvalert.warning({msg : "没有相应的KEY！"});
+                            }
+                            //note 继续获取
+                            if(start && havelen+keylen<2000){
+                                $scope.dealgetkeys(filter, parseInt(start));
                             }
                         }
                     });
@@ -688,6 +689,7 @@
                         if(err){
                             $scope.showplace('connecterror');
                         }else{
+                            $("#keydatatab tbody").html('');
                             $("#keydatatab tbody").append("<tr><th style='min-width:50px;'>Score</th><th>Value</th></tr>");
                             if(data.length>0){
                                 for(var i=0; i<data.length;){
