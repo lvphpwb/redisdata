@@ -155,6 +155,32 @@
                 <a href="#" class="btn btn-primary dealbtn">确定</a>
             </div>
         </div>
+
+        <div id="editkeydata_modal" class="modal hide fade" style="z-index:99999">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>修改KEY内容</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label">KEY：</label>
+                        <div class="controls">
+                            <input type="text" class="editkey" readonly>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">数据内容：</label>
+                        <div class="controls">
+                            <textarea style="height:300px; resize:none" class="editdata" placeholder="数据内容"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-info" ng-click="dealeditkeydata()">保存</a>
+            </div>
+        </div>
     </body>
     <script src="js/jquery.1.7.2.js"></script>
     <script src="lvjs/lvjs.js"></script>
@@ -381,18 +407,17 @@
                         });
                     });
                 }else{
-                    $scope.currentclient.keys(filter, function(err, data){
+                    //note 最多只取出2000个
+                    $scope.currentclient.scan(0, "match", filter, "count", 2000, function(err, data){
                         if(err){
                             $scope.showplace('connecterror');
                         }else{
-                            if(data.length > 2000){
-                                data = data.slice(0, 2000);
-                            }
-                            var keylen = data.length;
+                            var keylen = data[1].length;
                             var offset = 0;
                             if(keylen > 0){
-                                data.sort();
-                                angular.forEach(data, function(key, index){
+                                var keydata = data[1];
+                                keydata.sort();
+                                angular.forEach(keydata, function(key, index){
                                     $scope.typeofkey(key, function(type){
                                         $scope.sizeofkey(type, key, function(data, len){
                                             var option = $("<option></option>");
@@ -407,11 +432,7 @@
                                             offset++;
                                             if(offset == keylen){
                                                 $("#keyslist").find('option').bind('click', $scope.selectkey);
-                                                if(keylen>2000){
-                                                    jQuery.lvalert.warning({msg : "KEY的数量超过2000个，只列出2000个！"});
-                                                }else{
-                                                    jQuery.lvalert.hide();
-                                                }
+                                                jQuery.lvalert.hide();
                                             }
                                         });
                                     });
@@ -421,6 +442,46 @@
                             }
                         }
                     });
+                    // $scope.currentclient.keys(filter, function(err, data){
+                    //     if(err){
+                    //         $scope.showplace('connecterror');
+                    //     }else{
+                    //         if(data.length > 2000){
+                    //             data = data.slice(0, 2000);
+                    //         }
+                    //         var keylen = data.length;
+                    //         var offset = 0;
+                    //         if(keylen > 0){
+                    //             data.sort();
+                    //             angular.forEach(data, function(key, index){
+                    //                 $scope.typeofkey(key, function(type){
+                    //                     $scope.sizeofkey(type, key, function(data, len){
+                    //                         var option = $("<option></option>");
+                    //                         option.attr("value", key);
+                    //                         option.attr("data-type", type);
+                    //                         if(type == "string"){
+                    //                             option.text(key + '      [' + type + ']');
+                    //                         }else{
+                    //                             option.text(key + '      [' + type + ':' + len + ']');
+                    //                         }
+                    //                         $("#keyslist").append(option);
+                    //                         offset++;
+                    //                         if(offset == keylen){
+                    //                             $("#keyslist").find('option').bind('click', $scope.selectkey);
+                    //                             if(keylen>2000){
+                    //                                 jQuery.lvalert.warning({msg : "KEY的数量超过2000个，只列出2000个！"});
+                    //                             }else{
+                    //                                 jQuery.lvalert.hide();
+                    //                             }
+                    //                         }
+                    //                     });
+                    //                 });
+                    //             });
+                    //         }else{
+                    //             jQuery.lvalert.warning({msg : "没有相应的KEY！"});
+                    //         }
+                    //     }
+                    // });
                 }
             };
             
@@ -540,35 +601,41 @@
                                 var td = $("<td></td>");
                                 td.text(data);
                                 tr.append(td);
+                                $("#keydatatab tbody").append("<tr><td>数据内容：<i class='icon-edit keydataedit' title='编辑' style='cursor:pointer;'></i></td></tr>");
                                 $("#keydatatab tbody").append(tr);
+                                $("#keydatatab tbody").find(".keydataedit").bind('click', function(){
+                                    $scope.editKeyData(key, data);
+                                });
                             }
                             jQuery.lvalert.hide();
                         }
                     });
                     break;
                   case 'hash':
-                    if(len > 2000){
-                        jQuery.lvalert.warning({msg : "items数量超过2000个，无法显示！"});
-                    }else{
-                        $scope.currentclient.hgetall(key, function(err, data){
-                            if(err){
-                                $scope.showplace('connecterror');
-                            }else{
-                                $("#keydatatab tbody").append("<tr><th style='min-width:50px;'>Key</th><th>Value</th></tr>");
-                                angular.forEach(data, function(value, key){
+                    $scope.currentclient.hscan(key, 0, "match", "*", "count", 2000, function(err, data){
+                        if(err){
+                            $scope.showplace('connecterror');
+                        }else{
+                            var hashdata = data[1];
+                            $("#keydatatab tbody").append("<tr><th style='min-width:50px;'>Key</th><th>Value</th></tr>");
+                            if(hashdata.length > 0){
+                                for(var i=0; i<hashdata.length; i+=2){
+                                    var hashkey = hashdata[i];
                                     var tr = $("<tr></tr>");
                                     var ktd = $("<td></td>");
                                     var vtd = $("<td></td>");
-                                    ktd.text(key);
-                                    vtd.text(value);
+                                    //var ctd = $("<td><i data-key='' data=hkey='' class='icon-remove' title='删除' style='cursor:pointer;'></i></td>");
+                                    ktd.text(hashkey);
+                                    vtd.text(hashdata[i+1]);
                                     tr.append(ktd);
                                     tr.append(vtd);
+                                    //tr.append(ctd);
                                     $("#keydatatab tbody").append(tr);
-                                });
-                                jQuery.lvalert.hide();
+                                }
                             }
-                        });
-                    }
+                            jQuery.lvalert.hide();
+                        }
+                    });
                     break;
                   case 'list':
                     $scope.currentclient.lrange(key, 0, 2000, function(err, data){
@@ -683,9 +750,12 @@
                 var key = $("#keyinfotab").find('.keydel').attr("data-key");
                 var type = $("#keyinfotab").find('.keydel').attr("data-type");
                 if(key){
-                    $scope.currentclient.del(key, function(err, data){
-                        jQuery.lvalert.success({msg : "删除成功！", mask : 0, timeout: 2000});
-                        $scope.showkeyinfo(type, key);
+                    $scope.confirm("您确定要删除此KEY吗？", function(){
+                        $scope.currentclient.del(key, function(err, data){
+                            jQuery.lvalert.success({msg : "删除成功！", mask : 0, timeout: 2000});
+                            $scope.showkeyinfo(type, key);
+                            $("#confirmmodal").modal("hide");
+                        });
                     });
                 }
             };
@@ -702,6 +772,34 @@
                 }
                 $(obj).parent().parent().remove();
                 $scope.saveserver();
+            };
+
+            $scope.editKeyData = function(key, data){
+                $("#editkeydata_modal").find('.editkey').val(key);
+                $("#editkeydata_modal").find('.editdata').val(data);
+                $("#editkeydata_modal").modal('show');
+            };
+
+            $scope.dealeditkeydata = function(){
+                var key = $("#editkeydata_modal").find('.editkey').val();
+                var data = $("#editkeydata_modal").find('.editdata').val();
+                //note 需要处理TTL
+                $scope.ttlofkey(key, function(ttl){
+                    var cb = function(err, data){
+                        $("#editkeydata_modal").modal('hide');
+                        if(err){
+                            jQuery.lvalert.fail({msg : "修改失败！", mask : 0, timeout: 2000});
+                        }else{
+                            $scope.showkeyinfo("string", key);
+                            jQuery.lvalert.success({msg : "修改成功！", mask : 0, timeout: 2000});
+                        }
+                    };
+                    if(ttl <=0 ){
+                        $scope.currentclient.set(key, data, cb);
+                    }else{
+                        $scope.currentclient.setex(key, ttl, data, cb);
+                    }
+                });
             };
             
             $scope.loadserver();
