@@ -1,6 +1,14 @@
 *{ font-family: "微软雅黑"; margin: 0px; padding: 0px;}
 a{ cursor: pointer;}
 body{width: 100%;height: 100%;position: absolute;overflow: hidden;display: -webkit-box;-webkit-box-orient: horizontal;}
+::-webkit-scrollbar{padding-left:1px;background-color:#fafafa;overflow:visible;width:13px;}
+::-webkit-scrollbar-thumb{background-color:rgba(0, 0, 0, .7);background-clip:padding-box;border:1px solid transparent;border-left-width:2px;min-height:15px;border-radius: 8px;box-shadow:inset 1px 1px 0 rgba(0, 0, 0, .1),inset 0 -1px 0 rgba(0, 0, 0, .07);}
+::-webkit-scrollbar-thumb:vertical:hover{background-color:rgba(0, 0, 0, .7);}
+::-webkit-scrollbar-thumb:vertical:active{background-color:rgba(0, 0, 0, .5);}
+::-webkit-scrollbar-button{height:0;width:0;}
+::-webkit-scrollbar-track{background-clip:padding-box;border:solid transparent;border-width:0 0 0 4px;}
+::-webkit-scrollbar-corner{background:transparent;}
+.modal{z-index: 99999;}
 
 #titlebar {height: 35px;width: 100%;line-height: 35px;position: absolute;top: 0;left: 0;background: -webkit-linear-gradient(top, #44474a 0%, #36393c 100%);color: #eee;}
 #titlebar .dragbar {-webkit-app-region: drag;width: -webkit-calc(100% - 75px);}
@@ -10,8 +18,22 @@ body{width: 100%;height: 100%;position: absolute;overflow: hidden;display: -webk
 #titlebar .nav span {display: block;width: 35px;height: 100%;float: left;overflow: hidden;text-indent: -999px;position: relative; cursor: pointer;}
 #titlebar .nav span:hover {color: #FFF;}
 #titlebar .nav .minimize::after {position: absolute;top: 50%;left: 50%;margin-left: -4px;margin-top: -1px;background-color: #CCD6DE;width: 9px;height: 2px;content: "";}
-#titlebar .nav .close::after {position: absolute;top: 0;left: 0;margin-top: -1px;width: 100%;height: 100%;font-weight: bold;text-align: center;font-size: 16px;content: "×";text-indent: 0;}
+#titlebar .nav .closer::after {position: absolute;top: 0;left: 0;margin-top: -1px;width: 100%;height: 100%;font-weight: bold;text-align: center;font-size: 16px;content: "×";text-indent: 0;}
 #titlebar .nav .minimize:hover {background-color: #5a6064;}
-#titlebar .nav .close:hover {background-color: #C73636;}
+#titlebar .nav .closer:hover {background-color: #C73636;}
 
-#frame{border: none; height: -webkit-calc(100% - 35px);top: 35px; width: 100%; position: absolute; background: #eeeeee;}
+#mainshow{height: -webkit-calc(100% - 35px);top: 35px; width: 100%; position: absolute; background: #eeeeee;}
+#serverlist{position: absolute;top:0px; bottom:0px; left: 0px; padding: 10px;z-index:99;}
+#serverbtn{width:210px; text-align:center; margin:auto; margin-bottom:10px;}
+#serverlist .serveradd{ width: 180px;}
+#listdiv{ padding:0px;overflow: auto;overflow-x: hidden;}
+#listdiv a{ margin-bottom:3px; display:block; -webkit-user-select: none }
+
+#serverdata{position: absolute; top:0px; bottom:0px; left: 230px; right:0px; padding:10px; width: auto;}
+.rightplace{position: absolute; top:40%; bottom:0px; left: 400px; width:500px; padding:10px; display: none;}
+
+#serverstatus{height:490px;}
+#keyslist{height:490px; width:auto; max-width:400px; min-width:250px;}
+#keydataright{float:left; margin-left:15px;height: 488px;overflow-y: auto; display: none;}
+
+#keydatatab{max-width:420px;word-break: break-all; margin-bottom:0px;}

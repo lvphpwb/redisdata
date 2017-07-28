@@ -3,46 +3,27 @@
     <head>
         <title>REDIS数据 查看工具</title>
         <meta charset="UTF-8"/> 
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
+        <link href="lvjs/css/style.css" rel="stylesheet">
     </head>
     <body>
-        <div id="titlebar" ng-controller="topnavController">
-            <div class="dragbar">
-                <h1>REDIS数据 查看工具</h1>
-            </div>
-            <ul class="nav">
-                <span class="minimize" ng-click="minwindow()"></span>
-                <span class="close" ng-click="closewindow()"></span>
-            </ul>
+        <div id="app">
         </div>
-        <iframe id="frame" src="main.html"></iframe>
-        <script src="js/jquery.1.7.2.js"></script>
-        <script src="js/angular.min.js"></script>
         <script>
             var tray;
-
             var gui = require('nw.gui');
-            global.gui = gui;
-            global.mainWindow = gui.Window.get();
-
-            function topnavController($scope){
-                $scope.closewindow = function(){
-                        global.mainWindow.hide();
-                        setTimeout(function(){
-                            global.mainWindow.close();
-                        }, 100);
-                };
-                $scope.minwindow = function(){
-                    global.mainWindow.hide();
-                    tray = new gui.Tray({icon: "app/images/logo.png"});
-                    tray.on('click', function () {
-                        global.mainWindow.show();
-                        this.remove();
-                        tray = null;
-                    });
-                    return false;
-                };
-            }
+            window.gui = gui;
+            window.mainWindow = gui.Window.get();
+            var redis = require("redis");
+            var fs = require("fs");
+            window.redis = redis;
+            window.fs = fs;
         </script>
+        <script src="js/jquery.1.7.2.js"></script>
+        <script src="js/lodash.min.js"></script>
+        <script src="lvjs/lvjs.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="build.js"></script>
     </body>
 </html>
