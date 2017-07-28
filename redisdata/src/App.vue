@@ -25,8 +25,8 @@
       <div class="navbar">
         <div class="navbar-inner">
           <a class="brand">按KEY搜索</a>
-            <form class="navbar-form pull-left">
-              <input type="text" id="searchkey" @keyup="inputsearch">
+            <form class="navbar-form pull-left" submit="return false;">
+              <input type="text" id="searchkey" @keyup.enter="dealsearch(0)">
               <button type="button" @click="dealsearch(0)" class="btn btn-info">搜索</button>
               <button type="button" @click="dealsearch(1)" class="btn btn-info">搜索并保存为过滤器</button>
               <button type="button" @click="addkey()" class="btn btn-success">新建KEY</button>
@@ -560,14 +560,6 @@ export default {
           $("#myTab a:first").tab('show');
       }
       this.saveserver();
-    },
-    inputsearch (e) {
-      if(e.keyCode == 13){
-          this.dealsearch(0);
-      }
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
     },
     dealsearch (save) {
       var self = this;
