@@ -540,6 +540,8 @@ export default {
             //note 继续获取
             if(start && havelen+keylen<2000){
               self.dealsearchkeys(filter, parseInt(start));
+            }else if(start == 0 && keylen == 0 && self.keylist.length == 0){
+              jQuery.lvalert.error({msg : "没有找到对应的KEY！", mask : 0, timeout: 2000});
             }else{
               jQuery.lvalert.hide();
             }
