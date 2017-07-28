@@ -25,7 +25,7 @@
       <div class="navbar">
         <div class="navbar-inner">
           <a class="brand">按KEY搜索</a>
-            <form class="navbar-form pull-left" submit="return false;">
+            <form class="navbar-form pull-left" onsubmit="return false;">
               <input type="text" id="searchkey" @keyup.enter="dealsearch(0)">
               <button type="button" @click="dealsearch(0)" class="btn btn-info">搜索</button>
               <button type="button" @click="dealsearch(1)" class="btn btn-info">搜索并保存为过滤器</button>
@@ -372,7 +372,7 @@ export default {
       server.selected = true;
       this.currentserver = server.k;
       //note 获取filter
-      var filterlist = _.concat([], this.serverlist[this.currentserver].filter);
+      var filterlist = _.concat([], this.serverlist[this.currentserver].filter||[]);
       if(filterlist){
         self.filterlist = filterlist;
       }
