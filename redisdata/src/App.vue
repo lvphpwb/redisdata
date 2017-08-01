@@ -1,14 +1,5 @@
 <template>
 <div>
-  <div id="titlebar">
-    <div class="dragbar">
-      <h1>REDIS数据 查看工具</h1>
-    </div>
-    <ul class="nav">
-      <span class="minimize" @click="minwindow"></span>
-      <span class="closer" @click="closewindow"></span>
-    </ul>
-  </div>
   <div id="mainshow">
     <div id="serverlist">
       <div id="serverbtn">
@@ -273,22 +264,6 @@ export default {
     this.showplace("welcome");
   },
   methods: {
-    closewindow () {
-      window.mainWindow.hide();
-      setTimeout(function(){
-        window.mainWindow.close();
-      }, 100);
-    },
-    minwindow () {
-      window.mainWindow.hide();
-      let tray = new gui.Tray({icon: "app/images/logo.png"});
-      tray.on('click', function () {
-        window.mainWindow.show();
-        this.remove();
-        tray = null;
-      });
-      return false;
-    },
     confirm (content, callback) {
         $("#confirmmodal").find(".modalcontent").text(content);
         $("#confirmmodal").find(".dealbtn").unbind('click');
@@ -578,12 +553,15 @@ export default {
           }
           if($.inArray(searchkey, self.filterlist) == -1){
               self.filterlist.push(searchkey);
+              if(!self.serverlist[self.currentserver].filter){
+                self.serverlist[self.currentserver].filter = [];
+              }
               self.serverlist[self.currentserver].filter.push(searchkey);
               self.saveserver();
           }
           setTimeout(function(){
             $("#myTab a:last").tab('show');
-          }, 100);
+          }, 500);
         }else{
           $("#allkeys").tab('show');
         }
